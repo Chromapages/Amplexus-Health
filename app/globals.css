@@ -1,0 +1,23 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply font-sans text-ink antialiased;
+  }
+  
+  h1, h2 {
+    @apply font-serif;
+  }
+  
+  h3, h4, h5, h6 {
+    @apply font-sans font-semibold;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
