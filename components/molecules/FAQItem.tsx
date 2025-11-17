@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Text } from "@/components/atoms/Text";
+import { track } from "@/lib/analytics";
 
 interface FAQItemProps {
   question: string;
@@ -13,10 +14,16 @@ export const FAQItem = ({ question, answer, defaultOpen = false }: FAQItemProps)
   const [isOpen, setIsOpen] = useState(defaultOpen);
   const id = question.toLowerCase().replace(/\s+/g, "-");
 
+  const handleToggle = () => {
+    const newState = !isOpen;
+    setIsOpen(newState);
+    track("faq_toggle", { question: id, is_open: newState });
+  };
+
   return (
     <div className="border-b border-slate-200 last:border-0">
       <button
-        onClick={() => setIsOpen(!isOpen)}
+        onClick={handleToggle}
         aria-expanded={isOpen}
         aria-controls={`faq-answer-${id}`}
         className="w-full flex justify-between items-center py-4 text-left hover:text-teal transition-colors focus:outline-none focus:ring-2 focus:ring-teal focus:ring-offset-2 rounded"

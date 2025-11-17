@@ -1,14 +1,29 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Container } from "@/components/atoms/Container";
 import { Button } from "@/components/atoms/Button";
 import { NavLinkGroup } from "@/components/molecules/NavLinkGroup";
 import { navConfig } from "@/config/nav.config";
+import { track } from "@/lib/analytics";
 
 export const HeaderNav = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  // Close mobile menu on Escape key
+  useEffect(() => {
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === "Escape" && mobileMenuOpen) {
+        setMobileMenuOpen(false);
+      }
+    };
+
+    if (mobileMenuOpen) {
+      document.addEventListener("keydown", handleEscape);
+      return () => document.removeEventListener("keydown", handleEscape);
+    }
+  }, [mobileMenuOpen]);
 
   return (
     <header className="sticky top-0 z-50 bg-white border-b border-slate-200">
@@ -35,7 +50,11 @@ export const HeaderNav = () => {
 
           {/* Desktop CTA */}
           <div className="hidden md:block">
-            <Button href="/contact" size="sm">
+            <Button 
+              href="/contact" 
+              size="sm"
+              onClick={() => track("nav_click_cta", { location: "header" })}
+            >
               Start Now
             </Button>
           </div>
@@ -66,7 +85,11 @@ export const HeaderNav = () => {
           >
             <NavLinkGroup links={navConfig.primary} className="flex-col space-y-1" />
             <div className="mt-4">
-              <Button href="/contact" className="w-full">
+              <Button 
+                href="/contact" 
+                className="w-full"
+                onClick={() => track("nav_click_cta", { location: "mobile_menu" })}
+              >
                 Start Now
               </Button>
             </div>
